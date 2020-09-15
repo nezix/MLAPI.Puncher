@@ -4,4 +4,8 @@
   </PropertyGroup>
 
   <Import Project="..\MLAPI.Puncher.Shared\MLAPI.Puncher.Shared.projitems" Label="Shared" Condition="Exists('..\MLAPI.Puncher.Shared\MLAPI.Puncher.Shared.projitems')" />
+
+  <ItemGroup>
+    <PackageReference Include="Ruffles" Version="10.0.0" />
+  </ItemGroup>
 </Project>
