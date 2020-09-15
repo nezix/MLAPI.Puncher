@@ -1,4 +1,4 @@
-# MLAPI.Puncher
+# MLAPI.Puncher (Ruffles implementation)
 MLAPI.Puncher is a lightweight, cross-platform, easy to use, tiny implementation (<500 lines) of NAT punchthrough. It has both a server and client.
 
 ## Features
