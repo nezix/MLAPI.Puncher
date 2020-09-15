@@ -69,6 +69,9 @@ namespace MLAPI.Puncher.Shared
                         if (@event.Data.Count == length)
                         {
                             endpoint = (IPEndPoint)@event.EndPoint;
+
+                            Array.Copy(@event.Data.Array, 0, buffer, offset, length);
+
                             return @event.Data.Count;
                         }
                     }
@@ -93,6 +96,8 @@ namespace MLAPI.Puncher.Shared
         /// <param name="endpoint">The endpoint to send to.</param>
         public int SendTo(byte[] buffer, int offset, int length, int timeoutMs, IPEndPoint endpoint)
         {
+
+            socket.SendUnconnected();
             return -1;
         }
     }
