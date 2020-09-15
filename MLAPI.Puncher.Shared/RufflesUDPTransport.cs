@@ -30,7 +30,7 @@ namespace MLAPI.Puncher.Shared
         {
             if(socket != null)
             {
-
+                socket.Connect(endpoint);
             }
             //if (socket == null)
             //{
@@ -117,8 +117,12 @@ namespace MLAPI.Puncher.Shared
         /// <param name="endpoint">The endpoint to send to.</param>
         public int SendTo(byte[] buffer, int offset, int length, int timeoutMs, IPEndPoint endpoint)
         {
+            if (socket != null)
+            {
+                var ars = new ArraySegment<byte>(buffer, offset, length);
+                socket.SendUnconnected(ars, endpoint);
+            }
 
-            //socket.SendUnconnected();
             return -1;
         }
     }
