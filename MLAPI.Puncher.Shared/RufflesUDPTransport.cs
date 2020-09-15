@@ -4,6 +4,7 @@ using Ruffles.Connections;
 using Ruffles.Configuration;
 using Ruffles.Core;
 using Ruffles.Channeling;
+using System;
 
 namespace MLAPI.Puncher.Shared
 {
@@ -52,6 +53,31 @@ namespace MLAPI.Puncher.Shared
         /// <param name="endpoint">The endpoint the packet came from.</param>
         public int ReceiveFrom(byte[] buffer, int offset, int length, int timeoutMs, out IPEndPoint endpoint)
         {
+
+            DateTime startTime = DateTime.MinValue;
+
+            // Wait for message. This is to prevent a tight loop // Necessary ?
+            socket.SyncronizationEvent.WaitOne(1000);
+
+
+            while ((DateTime.Now - startTime).TotalMilliseconds < timeoutMs) {
+                NetworkEvent @event;
+                while ((@event = socket.Poll()).Type != NetworkEventType.Nothing)
+                {
+                    if (@event.Type == NetworkEventType.UnconnectedData)
+                    {
+                        if (@event.Data.Count == length)
+                        {
+                            endpoint = (IPEndPoint)@event.EndPoint;
+                            return @event.Data.Count;
+                        }
+                    }
+
+                    // Recycle the event
+                    @event.Recycle();
+                }
+            }
+
             endpoint = null;
             return -1;
         }
