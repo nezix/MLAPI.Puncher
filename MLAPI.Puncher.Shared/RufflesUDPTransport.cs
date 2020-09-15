@@ -15,23 +15,38 @@ namespace MLAPI.Puncher.Shared
     {
         private RuffleSocket socket;
 
+
+        public RufflesUDPTransport(RuffleSocket rsock)
+        {
+            socket = rsock;
+        }
+
+
         /// <summary>
         /// Binds the UDP socket to the specified local endpoint.
         /// </summary>
         /// <param name="endpoint">The local endpoint to bind to.</param>
         public void Bind(IPEndPoint endpoint)
         {
-                // Setup the socket info here
-            socket = new RuffleSocket(new SocketConfig()
+            if(socket != null)
             {
-                AllowBroadcasts = true, //necessary ?
-                AllowUnconnectedMessages = true, //necessary ?
-                DualListenPort = endpoint.Port
-            });
 
-            // Bind the socket
-            socket.Start();
+            }
+            //if (socket == null)
+            //{
+            //    // Setup the socket info here
+            //    socket = new RuffleSocket(new SocketConfig()
+            //    {
+            //        AllowBroadcasts = true, //necessary ?
+            //        AllowUnconnectedMessages = true, //necessary ?
+            //        DualListenPort = endpoint.Port
+            //    });
+
+            //    // Bind the socket
+            //    socket.Start();
+            //}
         }
+
 
         /// <summary>
         /// Closes the UDP socket.
@@ -39,7 +54,10 @@ namespace MLAPI.Puncher.Shared
         public void Close()
         {
             // Close the socket
-            socket.Stop();
+            if (socket != null)
+            {
+                socket.Stop();
+            }
         }
 
         /// <summary>
@@ -53,31 +71,34 @@ namespace MLAPI.Puncher.Shared
         /// <param name="endpoint">The endpoint the packet came from.</param>
         public int ReceiveFrom(byte[] buffer, int offset, int length, int timeoutMs, out IPEndPoint endpoint)
         {
+            if (socket != null)
+            {
+                DateTime startTime = DateTime.MinValue;
 
-            DateTime startTime = DateTime.MinValue;
-
-            // Wait for message. This is to prevent a tight loop // Necessary ?
-            socket.SyncronizationEvent.WaitOne(1000);
+                // Wait for message. This is to prevent a tight loop // Necessary ?
+                socket.SyncronizationEvent.WaitOne(1000);
 
 
-            while ((DateTime.Now - startTime).TotalMilliseconds < timeoutMs) {
-                NetworkEvent @event;
-                while ((@event = socket.Poll()).Type != NetworkEventType.Nothing)
+                while ((DateTime.Now - startTime).TotalMilliseconds < timeoutMs)
                 {
-                    if (@event.Type == NetworkEventType.UnconnectedData)
+                    NetworkEvent @event;
+                    while ((@event = socket.Poll()).Type != NetworkEventType.Nothing)
                     {
-                        if (@event.Data.Count == length)
+                        if (@event.Type == NetworkEventType.UnconnectedData)
                         {
-                            endpoint = (IPEndPoint)@event.EndPoint;
+                            if (@event.Data.Count == length)
+                            {
+                                endpoint = (IPEndPoint)@event.EndPoint;
 
-                            Array.Copy(@event.Data.Array, 0, buffer, offset, length);
+                                Array.Copy(@event.Data.Array, 0, buffer, offset, length);
 
-                            return @event.Data.Count;
+                                return @event.Data.Count;
+                            }
                         }
-                    }
 
-                    // Recycle the event
-                    @event.Recycle();
+                        // Recycle the event
+                        @event.Recycle();
+                    }
                 }
             }
 
@@ -97,7 +118,7 @@ namespace MLAPI.Puncher.Shared
         public int SendTo(byte[] buffer, int offset, int length, int timeoutMs, IPEndPoint endpoint)
         {
 
-            socket.SendUnconnected();
+            //socket.SendUnconnected();
             return -1;
         }
     }
