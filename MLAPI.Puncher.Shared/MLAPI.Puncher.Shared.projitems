@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)MessageType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IUDPTransport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RufflesUDPTransport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SlimUDPTransport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
   </ItemGroup>
