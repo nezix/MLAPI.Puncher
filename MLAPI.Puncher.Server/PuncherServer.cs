@@ -23,7 +23,7 @@ namespace MLAPI.Puncher.Server
         /// Gets or sets the transport used to communicate with puncher clients.
         /// </summary>
         /// <value>The transport used to communcate with puncher clients.</value>
-        public IUDPTransport Transport { get; set; } = new SlimUDPTransport();
+        public IUDPTransport Transport { get; set; };
 
         /// <summary>
         /// Start a server bound to the specified endpoint.

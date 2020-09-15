@@ -20,7 +20,9 @@ namespace MLAPI.Puncher.Shared
         {
             socket = rsock;
         }
-
+        public RufflesUDPTransport()
+        {
+        }
 
         /// <summary>
         /// Binds the UDP socket to the specified local endpoint.
@@ -32,19 +34,19 @@ namespace MLAPI.Puncher.Shared
             {
                 socket.Connect(endpoint);
             }
-            //if (socket == null)
-            //{
-            //    // Setup the socket info here
-            //    socket = new RuffleSocket(new SocketConfig()
-            //    {
-            //        AllowBroadcasts = true, //necessary ?
-            //        AllowUnconnectedMessages = true, //necessary ?
-            //        DualListenPort = endpoint.Port
-            //    });
+            else {
 
-            //    // Bind the socket
-            //    socket.Start();
-            //}
+                // Setup the socket info here
+                socket = new RuffleSocket(new SocketConfig()
+                {
+                    AllowBroadcasts = true, //necessary ?
+                    AllowUnconnectedMessages = true, //necessary ?
+                    DualListenPort = endpoint.Port
+                });
+
+                // Bind the socket
+                socket.Start();
+            }
         }
 
 

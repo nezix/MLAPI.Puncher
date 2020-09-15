@@ -7,6 +7,7 @@ namespace MLAPI.Puncher.Server.Console
         static void Main(string[] args)
         {
             PuncherServer server = new PuncherServer();
+            server.Transport = new MLAPI.Puncher.Shared.RufflesUDPTransport();
             server.Start(new IPEndPoint(IPAddress.Any, 6776));
         }
     }
