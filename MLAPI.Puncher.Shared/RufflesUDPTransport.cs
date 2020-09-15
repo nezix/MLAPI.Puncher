@@ -43,9 +43,11 @@ namespace MLAPI.Puncher.Shared
                     AllowUnconnectedMessages = true, //necessary ?
                     DualListenPort = endpoint.Port
                 });
+                
+                socket.Start();
 
                 // Bind the socket
-                socket.Start();
+                socket.Connect(endpoint);
             }
         }
 
