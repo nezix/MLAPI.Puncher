@@ -95,8 +95,6 @@ namespace MLAPI.Puncher.Server
         {
             int receiveSize = Transport.ReceiveFrom(_buffer, 0, _buffer.Length, -1, out IPEndPoint senderEndpoint);
 
-            // Address
-            IPAddress senderAddress = senderEndpoint.Address;
 
             if (receiveSize != _buffer.Length)
             {
@@ -107,6 +105,9 @@ namespace MLAPI.Puncher.Server
             {
                 return;
             }
+
+            // Address
+            IPAddress senderAddress = senderEndpoint.Address;
 
             // Register client packet
             byte registerFlags = _buffer[1];

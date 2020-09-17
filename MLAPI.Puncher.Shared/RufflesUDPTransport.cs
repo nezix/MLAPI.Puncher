@@ -30,26 +30,17 @@ namespace MLAPI.Puncher.Shared
         /// <param name="endpoint">The local endpoint to bind to.</param>
         public void Bind(IPEndPoint endpoint)
         {
-            if(socket != null)
+            
+            // Setup the socket info here
+            socket = new RuffleSocket(new SocketConfig()
             {
-                socket.Connect(endpoint);
-            }
-            else {
-
-                // Setup the socket info here
-                socket = new RuffleSocket(new SocketConfig()
-                {
-                    AllowBroadcasts = true, //necessary ?
-                    AllowUnconnectedMessages = true, //necessary ?
-                    DualListenPort = endpoint.Port,
-                    IPv4ListenAddress = endpoint.Address
-                });
+                AllowBroadcasts = true, //necessary ?
+                AllowUnconnectedMessages = true, //necessary ?
+                DualListenPort = endpoint.Port,
+                IPv4ListenAddress = endpoint.Address
+            });
                 
-                socket.Start();
-
-                // Bind the socket
-                socket.Connect(endpoint);
-            }
+            socket.Start();
         }
 
 
@@ -106,7 +97,7 @@ namespace MLAPI.Puncher.Shared
                     }
                 }
             }
-            endpoint = new IPEndPoint(IPAddress.Any, 0);
+            endpoint = null;
             return -1;
         }
 
