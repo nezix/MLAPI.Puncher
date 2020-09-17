@@ -16,7 +16,7 @@ namespace MLAPI.Puncher.Client.Console
             {
                 try
                 {
-                    using (PuncherClient listenPeer = new PuncherClient(PUNCHER_SERVER_HOST, PUNCHER_SERVER_PORT))
+                    using (PuncherClient listenPeer = new PuncherClient(PUNCHER_SERVER_HOST, PUNCHER_SERVER_PORT) { Transport = new MLAPI.Puncher.Shared.RufflesUDPTransport() })
                     {
                         System.Console.WriteLine("[LISTENER] Listening for single punch on our port 1234...");
                         IPEndPoint endpoint = listenPeer.ListenForSinglePunch(new IPEndPoint(IPAddress.Any, 1234));
@@ -35,7 +35,7 @@ namespace MLAPI.Puncher.Client.Console
             System.Console.Write("[CONNECTOR] Enter the address of the listener you want to punch: ");
             string address = System.Console.ReadLine();
 
-            using (PuncherClient connectPeer = new PuncherClient(PUNCHER_SERVER_HOST, PUNCHER_SERVER_PORT))
+            using (PuncherClient connectPeer = new PuncherClient(PUNCHER_SERVER_HOST, PUNCHER_SERVER_PORT) { Transport = new MLAPI.Puncher.Shared.RufflesUDPTransport() })
             {
                 System.Console.WriteLine("[CONNECTOR] Punching...");
 
