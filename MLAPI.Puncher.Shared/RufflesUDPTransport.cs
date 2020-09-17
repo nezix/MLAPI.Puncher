@@ -69,32 +69,27 @@ namespace MLAPI.Puncher.Shared
         {
             if (socket != null)
             {
-                DateTime startTime = DateTime.MinValue;
 
-                // Wait for message. This is to prevent a tight loop // Necessary ?
-                socket.SyncronizationEvent.WaitOne(1000);
+            // Wait for message. This is to prevent a tight loop // Necessary ?
+            socket.SyncronizationEvent.WaitOne(1000);
 
-
-                while ((DateTime.Now - startTime).TotalMilliseconds < timeoutMs)
+                NetworkEvent @event;
+                while ((@event = socket.Poll()).Type != NetworkEventType.Nothing)
                 {
-                    NetworkEvent @event;
-                    while ((@event = socket.Poll()).Type != NetworkEventType.Nothing)
+                    if (@event.Type == NetworkEventType.UnconnectedData)
                     {
-                        if (@event.Type == NetworkEventType.UnconnectedData)
+                        if (@event.Data.Count == length)
                         {
-                            if (@event.Data.Count == length)
-                            {
-                                endpoint = (IPEndPoint)@event.EndPoint;
+                            endpoint = (IPEndPoint)@event.EndPoint;
 
-                                Array.Copy(@event.Data.Array, 0, buffer, offset, length);
+                            Array.Copy(@event.Data.Array, 0, buffer, offset, length);
 
-                                return @event.Data.Count;
-                            }
+                            return @event.Data.Count;
                         }
-
-                        // Recycle the event
-                        @event.Recycle();
                     }
+
+                    // Recycle the event
+                    @event.Recycle();
                 }
             }
             endpoint = null;
