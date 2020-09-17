@@ -41,7 +41,8 @@ namespace MLAPI.Puncher.Shared
                 {
                     AllowBroadcasts = true, //necessary ?
                     AllowUnconnectedMessages = true, //necessary ?
-                    DualListenPort = endpoint.Port
+                    DualListenPort = endpoint.Port,
+                    IPv4ListenAddress = endPoint.Address
                 });
                 
                 socket.Start();
