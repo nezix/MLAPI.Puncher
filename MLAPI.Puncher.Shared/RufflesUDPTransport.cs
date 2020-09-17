@@ -107,7 +107,6 @@ namespace MLAPI.Puncher.Shared
                 }
             }
 
-            endpoint = null;
             return -1;
         }
 
@@ -125,7 +124,8 @@ namespace MLAPI.Puncher.Shared
             if (socket != null)
             {
                 var ars = new ArraySegment<byte>(buffer, offset, length);
-                socket.SendUnconnected(ars, endpoint);
+                if(socket.SendUnconnected(ars, endpoint))
+                    return buffer.Length;
             }
 
             return -1;
