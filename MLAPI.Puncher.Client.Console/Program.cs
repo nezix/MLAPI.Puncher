@@ -7,7 +7,7 @@ namespace MLAPI.Puncher.Client.Console
 {
     class Program
     {
-        public const string PUNCHER_SERVER_HOST = "puncher.midlevel.io";
+        public const string PUNCHER_SERVER_HOST = "127.0.0.1";
         public const int PUNCHER_SERVER_PORT = 6776;
 
         static void Main(string[] args)
