@@ -70,8 +70,8 @@ namespace MLAPI.Puncher.Shared
             if (socket != null)
             {
 
-            // Wait for message. This is to prevent a tight loop // Necessary ?
-            socket.SyncronizationEvent.WaitOne(1000);
+                // Wait for message. This is to prevent a tight loop
+                socket.SyncronizationEvent.WaitOne(timeoutMs);
 
                 NetworkEvent @event;
                 while ((@event = socket.Poll()).Type != NetworkEventType.Nothing)
