@@ -31,6 +31,10 @@ namespace MLAPI.Puncher.Server
         /// <param name="endpoint">Endpoint.</param>
         public void Start(IPEndPoint endpoint)
         {
+            if(Transport == null){
+                return;
+            }
+            
             Transport.Bind(endpoint);
 
             _cleanupThread = new Thread(() =>

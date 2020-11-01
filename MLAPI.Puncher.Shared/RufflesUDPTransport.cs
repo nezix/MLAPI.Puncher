@@ -15,7 +15,6 @@ namespace MLAPI.Puncher.Shared
     {
         private RuffleSocket socket;
 
-
         public RufflesUDPTransport(RuffleSocket rsock)
         {
             socket = rsock;
@@ -30,7 +29,8 @@ namespace MLAPI.Puncher.Shared
         /// <param name="endpoint">The local endpoint to bind to.</param>
         public void Bind(IPEndPoint endpoint)
         {
-            
+            if(socket != null)
+                return;
             // Setup the socket info here
             socket = new RuffleSocket(new SocketConfig()
             {

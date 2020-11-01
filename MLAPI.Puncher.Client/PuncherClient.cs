@@ -22,7 +22,7 @@ namespace MLAPI.Puncher.Client
         /// Gets or sets the transport used to communicate with puncher server.
         /// </summary>
         /// <value>The transport used to communcate with puncher server.</value>
-        public IUDPTransport Transport { get; set; } = new SlimUDPTransport();
+        public IUDPTransport Transport;
         /// <summary>
         /// Gets or sets the amount port predictions to attempt.
         /// </summary>
@@ -110,6 +110,9 @@ namespace MLAPI.Puncher.Client
         /// <param name="listenEndpoint">The endpoint where new players should join.</param>
         public void ListenForPunches(IPEndPoint listenEndpoint)
         {
+            if(Transport == null){
+                return;
+            }
             // Bind the socket
             Transport.Bind(listenEndpoint);
 
@@ -127,6 +130,9 @@ namespace MLAPI.Puncher.Client
         /// <param name="listenEndpoint">The endpoint where new players should join.</param>
         public IPEndPoint ListenForSinglePunch(IPEndPoint listenEndpoint)
         {
+            if(Transport == null){
+                return null;
+            }
             // Bind the socket
             Transport.Bind(listenEndpoint);
 
@@ -149,6 +155,11 @@ namespace MLAPI.Puncher.Client
             if (connectAddress.AddressFamily != AddressFamily.InterNetwork)
             {
                 throw new ArgumentException("Only IPv4 addresses can be punched. IPv6 addresses does not have to be punched as they dont use NAT.");
+            }
+
+            if(Transport == null){
+                punchResult = null;
+                return false;
             }
 
             // Bind the socket

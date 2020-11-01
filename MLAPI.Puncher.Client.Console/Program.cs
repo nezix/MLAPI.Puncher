@@ -3,6 +3,10 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Ruffles.Configuration;
+using Ruffles.Core;
+using MLAPI.Puncher.Shared;
+
 namespace MLAPI.Puncher.Client.Console
 {
     class Program
@@ -12,11 +16,21 @@ namespace MLAPI.Puncher.Client.Console
 
         static void Main(string[] args)
         {
+            //Get Ruffles socket from MLAPI
+
+            RuffleSocket socket = new RuffleSocket(new SocketConfig()
+            {
+                AllowBroadcasts = true, //necessary ?
+                AllowUnconnectedMessages = true, //necessary ?
+            });
+
+            IUDPTransport rufflesTransport = new MLAPI.Puncher.Shared.RufflesUDPTransport(socket);
+
             Task listenTask = Task.Factory.StartNew(() =>
             {
                 try
                 {
-                    using (PuncherClient listenPeer = new PuncherClient(PUNCHER_SERVER_HOST, PUNCHER_SERVER_PORT) { Transport = new MLAPI.Puncher.Shared.RufflesUDPTransport() })
+                    using (PuncherClient listenPeer = new PuncherClient(PUNCHER_SERVER_HOST, PUNCHER_SERVER_PORT) { Transport = rufflesTransport })
                     {
                         System.Console.WriteLine("[LISTENER] Listening for single punch on our port 1234...");
                         IPEndPoint endpoint = listenPeer.ListenForSinglePunch(new IPEndPoint(IPAddress.Any, 1234));
@@ -35,7 +49,7 @@ namespace MLAPI.Puncher.Client.Console
             System.Console.Write("[CONNECTOR] Enter the address of the listener you want to punch: ");
             string address = System.Console.ReadLine();
 
-            using (PuncherClient connectPeer = new PuncherClient(PUNCHER_SERVER_HOST, PUNCHER_SERVER_PORT) { Transport = new MLAPI.Puncher.Shared.RufflesUDPTransport() })
+            using (PuncherClient connectPeer = new PuncherClient(PUNCHER_SERVER_HOST, PUNCHER_SERVER_PORT) { Transport = rufflesTransport })
             {
                 System.Console.WriteLine("[CONNECTOR] Punching...");
 
